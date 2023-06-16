@@ -5,5 +5,17 @@
   "repository": "git@github.com:mantaray-app/webtorrent-bridge.git",
   "author": "Kento Nishi <kento24gs@outlook.com>",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@babel/core": "7.22.5",
+    "@babel/eslint-parser": "^7.22.5",
+    "@babel/plugin-syntax-import-assertions": "7.22.5",
+    "@babel/preset-env": "7.22.5",
+    "babelify": "10.0.0",
+    "eslint": "^8.42.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.0",
+    "eslint-plugin-promise": "^6.1.1"
+  }
 }
