@@ -17,5 +17,12 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^16.0.0",
     "eslint-plugin-promise": "^6.1.1"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "bep9-metadata-dl": "^0.3.1",
+    "torrent-stream": "^1.2.1"
   }
 }
