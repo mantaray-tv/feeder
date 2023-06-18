@@ -1,6 +1,8 @@
 class LazyLoadChunkStore {
-  constructor (chunkLength, engine) {
-    this.chunkLength = chunkLength
+  constructor (length, pieceLength, engine) {
+    this.length = length
+    this.pieceLength = pieceLength
+    this.chunkLength = Math.ceil(length / pieceLength)
     this.engine = engine
   }
 
@@ -9,18 +11,29 @@ class LazyLoadChunkStore {
   }
 
   get (index, opts, cb) {
-    opts = opts || { offset: 0, length: this.chunkLength }
-    const stream = this.engine.createReadStream({
-      start: index * this.chunkLength + opts.offset,
-      end: index * this.chunkLength + opts.offset + opts.length - 1
+    if (typeof opts === 'function') return this.get(index, {}, opts)
+    opts.offset = opts.offset || 0
+    opts.length = opts.length || this.pieceLength
+    const files = this.engine.torrent.files
+    let fileIndex = 0
+    let fileOffset = 0
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      if (fileOffset + file.length > index * this.pieceLength) {
+        fileIndex = i
+        break
+      }
+      fileOffset += file.length
+    }
+    const file = this.engine.files[fileIndex]
+    file.select()
+    const stream = file.createReadStream({
+      start: index * this.pieceLength - fileOffset + opts.offset,
+      end: index * this.pieceLength - fileOffset + opts.offset + opts.length - 1
     })
-    // convert stream to buffer
-    const bufs = []
     stream.on('data', (data) => {
-      bufs.push(data)
-    })
-    stream.on('end', () => {
-      cb(null, Buffer.concat(bufs))
+      console.log(`get ${index} ${opts.offset} ${opts.length}`, data)
+      cb(null, data)
     })
   }
 
