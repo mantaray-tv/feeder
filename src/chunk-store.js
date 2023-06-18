@@ -1,9 +1,25 @@
+import { LRUCache } from 'lru-cache'
+import { MAX_BYTES_SELECT_PER_TORRENT } from '../constants.js'
+
 class LazyLoadChunkStore {
   constructor (length, pieceLength, engine) {
     this.length = length
     this.pieceLength = pieceLength
     this.chunkLength = Math.ceil(length / pieceLength)
     this.engine = engine
+    this.lru = new LRUCache({
+      maxSize: MAX_BYTES_SELECT_PER_TORRENT,
+      sizeCalculation: (value, key) => {
+        return value.length
+      },
+      dispose: (value, key) => {
+        value.deselect()
+      }
+    })
+    engine.files.forEach((file, index) => {
+      file.select()
+      this.lru.set(index, file)
+    })
   }
 
   put (index, buf, cb) {
@@ -14,6 +30,7 @@ class LazyLoadChunkStore {
     if (typeof opts === 'function') return this.get(index, {}, opts)
     opts.offset = opts.offset || 0
     opts.length = opts.length || this.pieceLength
+    globalThis.engineLRU.get(this.engine.torrent.infoHash)
     const files = this.engine.torrent.files
     let fileIndex = 0
     let fileOffset = 0
@@ -26,13 +43,13 @@ class LazyLoadChunkStore {
       fileOffset += file.length
     }
     const file = this.engine.files[fileIndex]
+    this.lru.get(index)
     file.select()
     const stream = file.createReadStream({
       start: index * this.pieceLength - fileOffset + opts.offset,
       end: index * this.pieceLength - fileOffset + opts.offset + opts.length - 1
     })
     stream.on('data', (data) => {
-      console.log(`get ${index} ${opts.offset} ${opts.length}`, data)
       cb(null, data)
     })
   }
