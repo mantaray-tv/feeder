@@ -1,2 +1,0 @@
-export const MAX_NUM_PROXY = 25
-export const MAX_BYTES_SELECT_PER_TORRENT = 1024 * 1024 * 1024

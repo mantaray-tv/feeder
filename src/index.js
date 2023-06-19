@@ -2,28 +2,41 @@ import WebTorrent from 'webtorrent'
 import torrentEngine from 'torrent-stream'
 import LazyLoadChunkStore from './chunk-store.js'
 import { LRUCache } from 'lru-cache'
-import { MAX_NUM_PROXY } from '../constants.js'
+import C from './constants.js'
+import ReconnectingEventSource from 'reconnecting-eventsource'
+import EventSource from 'eventsource'
+
+global.EventSource = EventSource
 
 const client = new WebTorrent()
-globalThis.engineLRU = new LRUCache({
-  max: MAX_NUM_PROXY,
+const engineLRU = new LRUCache({
+  max: C.MAX_NUM_PROXY,
   dispose: (key, value) => {
-    value.destroy()
+    value.engine.destroy()
+    value.client.destroy()
+    value.preloadedStore.reset()
   }
 })
 
-const infoHash = 'e8bab7a37a347f30e85f932dcd15e4c0cc141aa8'
-const engine = torrentEngine(infoHash)
+const sse = new ReconnectingEventSource(C.COORDINATOR_URL)
 
-engine.on('ready', async () => {
-  const meta = engine.torrent.info
-  const preloadedStore = new LazyLoadChunkStore(meta.length, meta['piece length'], engine)
-  globalThis.engineLRU.set(infoHash, engine)
-  client.seed(null, {
-    metadata: meta,
-    infoHash,
-    preloadedStore
-  }, (torrent) => {
-    console.log(`Proxying ${torrent.infoHash}`)
+sse.addEventListener('message', async (event) => {
+  const { infoHash } = JSON.parse(event.data)
+  const engine = torrentEngine(infoHash)
+  engine.on('ready', async () => {
+    const meta = engine.torrent.info
+    const preloadedStore = new LazyLoadChunkStore(meta.length, meta['piece length'], engine, engineLRU)
+    engineLRU.set(infoHash, {
+      engine,
+      client,
+      preloadedStore
+    })
+    client.seed(null, {
+      metadata: meta,
+      infoHash,
+      preloadedStore
+    }, (torrent) => {
+      console.log(`Proxying ${torrent.infoHash}`)
+    })
   })
 })
