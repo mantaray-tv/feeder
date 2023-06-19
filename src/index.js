@@ -11,7 +11,8 @@ global.EventSource = EventSource
 const client = new WebTorrent()
 const engineLRU = new LRUCache({
   max: C.MAX_NUM_PROXY,
-  dispose: (key, value) => {
+  dispose: (value, key) => {
+    console.log(`Disposing ${key}`)
     value.engine.destroy()
     value.client.destroy()
     value.preloadedStore.reset()
@@ -22,6 +23,7 @@ const sse = new ReconnectingEventSource(C.COORDINATOR_URL)
 
 sse.addEventListener('message', async (event) => {
   const { infoHash } = JSON.parse(event.data)
+  if (engineLRU.get(infoHash)) return
   const engine = torrentEngine(infoHash)
   engine.on('ready', async () => {
     const meta = engine.torrent.info
