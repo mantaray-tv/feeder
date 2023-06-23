@@ -20,27 +20,35 @@ const engineLRU = new LRUCache({
 })
 
 const sse = new ReconnectingEventSource(C.COORDINATOR_URL)
-const trackers = Array.from(new Set([
+const trackers = [
+  ...[
+    'udp://tracker.openbittorrent.com:80/announce',
+    'udp://tracker.ccc.de:80/announce',
+    'udp://tracker.internetwarriors.net:1337/announce',
+    'udp://tracker.leechers-paradise.org:6969/announce',
+    'udp://tracker.coppersurfer.tk:6969/announce',
+    'udp://exodus.desync.com:6969/announce',
+    'wss://tracker.btorrent.xyz/announce',
+    'wss://tracker.openwebtorrent.com/announce',
+    'wss://tracker.fastcast.nz/announce',
+    'udp://tracker.opentrackr.org:1337/announce',
+    'udp://explodie.org:6969/announce',
+    'udp://tracker.empire-js.us:1337/announce',
+    'http://bt.beatrice-raws.org:80/announce',
+    'http://nyaa.tracker.wf:7777/announce',
+    'http://bt.hliang.com:2710/announce'
+  ].reverse(),
   ...(
     (
       await (
         await fetch('https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt')
       ).text()
     ).split('\n').map((tracker) => tracker.trim()).filter((tracker) => tracker.length > 0)
-  ),
-  'udp://tracker.openbittorrent.com:80',
-  'udp://tracker.ccc.de:80',
-  'udp://tracker.internetwarriors.net:1337',
-  'udp://tracker.leechers-paradise.org:6969',
-  'udp://tracker.coppersurfer.tk:6969',
-  'udp://exodus.desync.com:6969',
-  'wss://tracker.btorrent.xyz',
-  'wss://tracker.openwebtorrent.com',
-  'wss://tracker.fastcast.nz',
-  'udp://tracker.opentrackr.org:1337',
-  'udp://explodie.org:6969',
-  'udp://tracker.empire-js.us:1337'
-]))
+  )
+].reduce(function (a, b) {
+  if (a.indexOf(b) < 0) a.push(b)
+  return a
+}, [])
 globalThis.TRACKERS = trackers
 
 sse.addEventListener('message', async (event) => {
