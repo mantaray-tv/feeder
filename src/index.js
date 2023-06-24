@@ -12,8 +12,8 @@ const client = new WebTorrent()
 const engineLRU = new LRUCache({
   max: C.MAX_NUM_PROXY,
   dispose: (value, key) => {
-    console.log(`Disposing ${key}`)
-    value.engine.destroy()
+    console.log(`Removing ${key}`)
+    // value.engine.destroy()
     value.client.destroy()
     value.preloadedStore.reset()
   }
@@ -22,22 +22,15 @@ const engineLRU = new LRUCache({
 const sse = new ReconnectingEventSource(C.COORDINATOR_URL)
 const trackers = [
   ...[
-    'udp://tracker.openbittorrent.com:80/announce',
-    'udp://tracker.ccc.de:80/announce',
-    'udp://tracker.internetwarriors.net:1337/announce',
-    'udp://tracker.leechers-paradise.org:6969/announce',
-    'udp://tracker.coppersurfer.tk:6969/announce',
-    'udp://exodus.desync.com:6969/announce',
     'wss://tracker.btorrent.xyz/announce',
     'wss://tracker.openwebtorrent.com/announce',
-    'wss://tracker.fastcast.nz/announce',
-    'udp://tracker.opentrackr.org:1337/announce',
-    'udp://explodie.org:6969/announce',
-    'udp://tracker.empire-js.us:1337/announce',
+    'wss://tracker.fastcast.nz/announce'
+  ],
+  ...[
     'http://bt.beatrice-raws.org:80/announce',
     'http://nyaa.tracker.wf:7777/announce',
     'http://bt.hliang.com:2710/announce'
-  ].reverse(),
+  ],
   ...(
     (
       await (
@@ -55,7 +48,8 @@ sse.addEventListener('message', async (event) => {
   const { infoHash } = JSON.parse(event.data)
   if (engineLRU.get(infoHash)) return
   const engine = torrentEngine(infoHash, { trackers })
-  engine.on('ready', async () => {
+  console.log(`Fetching ${infoHash}`)
+  engine.on('torrent', async () => {
     const meta = engine.torrent.info
     const preloadedStore = new LazyLoadChunkStore(meta.length, meta['piece length'], engine, engineLRU)
     engineLRU.set(infoHash, {
@@ -63,6 +57,7 @@ sse.addEventListener('message', async (event) => {
       client,
       preloadedStore
     })
+    engine.destroy()
     client.seed(null, {
       metadata: meta,
       infoHash,
