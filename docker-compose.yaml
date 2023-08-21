@@ -3,5 +3,6 @@ services:
   sandbox:
     container_name: sandbox
     build:
+      context: ./
       dockerfile: ./Dockerfile
-    image: sandbox:latest
+    image: ghcr.io/mantaray-tv/feeder
