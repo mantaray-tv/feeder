@@ -1,6 +1,0 @@
-[submodule "webtorrent"]
-	path = webtorrent
-	url = git@github.com:mantaray-app/webtorrent.git
-[submodule "bittorrent-dht"]
-	path = bittorrent-dht
-	url = git@github.com:mantaray-app/bittorrent-dht.git
