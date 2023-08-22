@@ -1,3 +1,4 @@
 mkdir -p /root/.cache/vlc
 sed -i 's/geteuid/getppid/' /usr/bin/vlc
-vlc -I telnet /test.torrent --sout '#transcode{vcodec=H264,threads=1,acodec=aac,soverlay}:std{access=http,mux=ts,dst=:8080/stream.ts}' --avcodec-hw=none
+lcp --proxyUrl http://localhost:8000/
+vlc -I dummy /test.torrent vlc://quit --sout '#transcode{vcodec=h264,acodec=aac,soverlay,threads=1}:std{access=http,mux=ts,dst=:8000/stream.ts}'
