@@ -1,6 +1,5 @@
-mkdir -p /root/.cache/vlc
-mkdir /live
 cd /live
+mkdir -p /root/.cache/vlc
 http-server -p 8443 --cors -c-1 > /dev/null &
 sed -i 's/geteuid/getppid/' /usr/bin/vlc
 cpulimit -m -l 10 -- vlc -I dummy /test.torrent vlc://quit --sout '#http{mux=ts,dst=:8000/stream.ts}' &

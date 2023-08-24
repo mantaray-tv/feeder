@@ -9,6 +9,8 @@ RUN apt install vlc-plugin-bittorrent -y
 RUN apt install ffmpeg -y
 RUN apt install cpulimit -y
 RUN npm install -g http-server
+RUN mkdir /live
+COPY ./index.html /live/index.html
 COPY ./run.sh /run.sh
 COPY ./test.torrent /test.torrent
 ENTRYPOINT ["/bin/bash", "/run.sh"]
