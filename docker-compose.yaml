@@ -6,3 +6,5 @@ services:
       context: ./
       dockerfile: ./Dockerfile
     image: ghcr.io/mantaray-tv/feeder
+    ports:
+      - "8010:8010"
