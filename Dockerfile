@@ -1,4 +1,4 @@
-FROM debian
+FROM ubuntu
 
 LABEL org.opencontainers.image.source=https://github.com/mantaray-tv/feeder
 RUN apt-get update -y
