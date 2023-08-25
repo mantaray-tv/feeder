@@ -7,6 +7,7 @@ RUN apt install -y npm
 RUN apt install -y vlc
 RUN apt install vlc-plugin-bittorrent -y
 RUN apt install ffmpeg -y
+RUN apt install -y tor
 RUN npm install -g http-server
 RUN npm install -g peerflix
 RUN mkdir /live

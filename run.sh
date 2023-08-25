@@ -1,3 +1,4 @@
+source torsocks on
 cd /live
 mkdir -p /root/.cache/vlc
 http-server -p 8443 --cors -c-1 &
