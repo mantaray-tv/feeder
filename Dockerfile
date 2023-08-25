@@ -11,11 +11,14 @@ RUN apt install -y npm
 RUN apt install -y vlc
 # RUN apt install vlc-plugin-bittorrent -y
 RUN apt install ffmpeg -y
-RUN apt install -y tor
 RUN apt install -y curl
+# RUN apt install -y tor
+RUN git clone https://git.torproject.org/tor.git
+RUN apt install -y autoconf automake libtool gcc
+RUN cd tor && bash ./autogen.sh && ./configure && make && make install
+RUN cd .. && rm -rf tor
 # RUN apt install -y torsocks
 RUN git clone https://gitlab.torproject.org/tpo/core/torsocks.git
-RUN apt install -y autoconf automake libtool gcc
 RUN cd torsocks && bash ./autogen.sh && ./configure && make && make install
 RUN cd .. && rm -rf torsocks
 RUN apt remove -y autoconf automake libtool gcc
