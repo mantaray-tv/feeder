@@ -15,7 +15,7 @@ RUN apt install -y tor
 RUN apt install -y torsocks
 RUN apt install -y curl
 # RUN npm install -g http-server
-RUN npm install -g peerflix
+RUN npm install peerflix
 RUN npm install -g local-cors-proxy
 RUN mkdir /live
 COPY ./index.html /live/index.html

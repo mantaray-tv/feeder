@@ -11,7 +11,7 @@ while true; do
     fi
 done
 sed -i 's/geteuid/getppid/' /usr/bin/vlc
-torsocks peerflix /test.torrent --vlc -- -I dummy vlc://quit --sout "'#transcode{vcodec=VP80,acodec=vorb,soverlay}:std{access=http,mux=webm,dst=:8000/stream.webm}'" &
+torsocks npx peerflix /test.torrent --vlc -- -I dummy vlc://quit --sout "'#transcode{vcodec=VP80,acodec=vorb,soverlay}:std{access=http,mux=webm,dst=:8000/stream.webm}'" &
 # torsocks peerflix /test.torrent vlc -I dummy vlc://quit --sout '#std{access=http,mux=ts,dst=:8000/stream.ts}' &
 # while true; do
 #     echo "Waiting for stream"
