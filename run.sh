@@ -2,7 +2,7 @@ cd /live
 mkdir -p /root/.cache/vlc
 http-server -p 8443 --cors -c-1 &
 iptables -A INPUT -p tcp --destination-port 6881:6889 -j DROP
-tc qdisc add dev eth0 root tbf rate 500kbit latency 50ms burst 5000
+tc qdisc add dev eth0 root tbf rate 100kbps latency 50ms burst 1540
 until $(curl --output /dev/null --silent --max-filesize 1024 --fail http://localhost:8443); do
     echo Waiting for server
     sleep 1
