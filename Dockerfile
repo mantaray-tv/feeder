@@ -12,9 +12,11 @@ RUN apt install -y vlc
 # RUN apt install vlc-plugin-bittorrent -y
 RUN apt install ffmpeg -y
 RUN apt install -y tor
-RUN apt install -y torsocks
 RUN apt install -y curl
-RUN apt upgrade -y
+# RUN apt install -y torsocks
+RUN git clone https://gitlab.torproject.org/tpo/core/torsocks.git
+RUN cd torsocks && bash ./autogen.sh && ./configure && make && make install
+RUN cd .. && rm -rf torsocks
 # RUN npm install -g http-server
 RUN npm install -g peerflix
 RUN npm install -g local-cors-proxy
