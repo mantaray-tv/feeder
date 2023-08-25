@@ -13,10 +13,12 @@ RUN apt install vlc-plugin-bittorrent -y
 RUN apt install ffmpeg -y
 RUN apt install -y tor
 RUN apt install -y torsocks
+RUN apt install -y curl
 RUN npm install -g http-server
 RUN mkdir /live
 COPY ./index.html /live/index.html
 COPY ./run.sh /run.sh
 COPY ./test.torrent /test.torrent
+COPY ./torrc /etc/tor/torrc
 COPY ./torsocks.conf /etc/tor/torsocks.conf
 ENTRYPOINT ["/bin/bash", "/run.sh"]
