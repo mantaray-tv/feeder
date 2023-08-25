@@ -18,4 +18,5 @@ RUN mkdir /live
 COPY ./index.html /live/index.html
 COPY ./run.sh /run.sh
 COPY ./test.torrent /test.torrent
+COPY ./torsocks.conf /etc/tor/torsocks.conf
 ENTRYPOINT ["/bin/bash", "/run.sh"]
