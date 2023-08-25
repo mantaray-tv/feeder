@@ -8,6 +8,7 @@ RUN apt install -y vlc
 RUN apt install vlc-plugin-bittorrent -y
 RUN apt install ffmpeg -y
 RUN apt install cpulimit -y
+RUN apt install -y curl
 RUN npm install -g http-server
 RUN mkdir /live
 COPY ./index.html /live/index.html
