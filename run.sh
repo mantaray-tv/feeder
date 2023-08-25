@@ -1,7 +1,7 @@
 cd /live
 mkdir -p /root/.cache/vlc
 # http-server -p 8443 --cors -c-1 &
-lcp --proxyUrl http://localhost:8000/ --port 8443 &
+~/.global-npm/bin/lcp --proxyUrl http://localhost:8000/ --port 8443 &
 tor &
 while true; do
     echo "Waiting for tor to start"
@@ -11,7 +11,7 @@ while true; do
     fi
 done
 sed -i 's/geteuid/getppid/' /usr/bin/vlc
-torsocks npx peerflix /test.torrent --vlc -- -I dummy vlc://quit --sout "'#transcode{vcodec=VP80,acodec=vorb,soverlay}:std{access=http,mux=webm,dst=:8000/stream.webm}'" &
+torsocks ~/.global-npm/bin/peerflix /test.torrent --vlc -- -I dummy vlc://quit --sout "'#transcode{vcodec=VP80,acodec=vorb,soverlay}:std{access=http,mux=webm,dst=:8000/stream.webm}'" &
 # torsocks peerflix /test.torrent vlc -I dummy vlc://quit --sout '#std{access=http,mux=ts,dst=:8000/stream.ts}' &
 # while true; do
 #     echo "Waiting for stream"
