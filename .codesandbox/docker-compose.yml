@@ -2,10 +2,7 @@ version: "3"
 services:
   sandbox:
     container_name: sandbox
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
-    image: ghcr.io/mantaray-tv/feeder
+    image: 'ghcr.io/mantaray-tv/feeder'
     ports:
       - "8443:8443"
     cap_add:
