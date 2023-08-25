@@ -1,4 +1,4 @@
-FROM ubuntu:23.04
+FROM ubuntu
 
 LABEL org.opencontainers.image.source=https://github.com/mantaray-tv/feeder
 
@@ -14,8 +14,8 @@ RUN apt install ffmpeg -y
 RUN apt install -y tor
 RUN apt install -y torsocks
 RUN apt install -y curl
+RUN apt upgrade -y
 # RUN npm install -g http-server
-RUN npm config set prefix '~/.global-npm'
 RUN npm install -g peerflix
 RUN npm install -g local-cors-proxy
 RUN mkdir /live
