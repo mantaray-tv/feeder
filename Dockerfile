@@ -19,7 +19,7 @@ RUN apt install -y autoconf automake libtool gcc
 RUN cd torsocks && bash ./autogen.sh && ./configure && make && make install
 RUN cd .. && rm -rf torsocks
 RUN apt remove -y autoconf automake libtool gcc
-# RUN npm install -g http-server
+RUN npm install -g http-server
 RUN npm install -g peerflix
 RUN npm install -g local-cors-proxy
 RUN mkdir /live
