@@ -14,7 +14,6 @@ RUN apt install ffmpeg -y
 RUN apt install -y tor
 RUN apt install -y torsocks
 RUN npm install -g http-server
-RUN npm install -g peerflix
 RUN mkdir /live
 COPY ./index.html /live/index.html
 COPY ./run.sh /run.sh
