@@ -14,7 +14,7 @@ RUN apt install ffmpeg -y
 RUN apt install -y curl
 # RUN apt install -y tor
 RUN git clone https://git.torproject.org/tor.git
-RUN apt install -y autoconf automake libtool gcc
+RUN apt install -y autoconf automake libtool gcc libevent-dev
 RUN cd tor && bash ./autogen.sh && ./configure && make && make install
 RUN cd .. && rm -rf tor
 # RUN apt install -y torsocks
