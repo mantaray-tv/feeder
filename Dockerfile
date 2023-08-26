@@ -14,14 +14,14 @@ RUN apt install ffmpeg -y
 RUN apt install -y curl
 # RUN apt install -y tor
 RUN git clone https://git.torproject.org/tor.git
-RUN apt install -y autoconf automake libtool gcc libevent-dev
+RUN apt install -y autoconf automake libtool gcc libevent-dev libssl-dev zlib1g-dev
 RUN cd tor && bash ./autogen.sh && ./configure && make && make install
 RUN cd .. && rm -rf tor
 # RUN apt install -y torsocks
 RUN git clone https://gitlab.torproject.org/tpo/core/torsocks.git
 RUN cd torsocks && bash ./autogen.sh && ./configure && make && make install
 RUN cd .. && rm -rf torsocks
-RUN apt remove -y autoconf automake libtool gcc
+RUN apt remove -y autoconf automake libtool gcc libevent-dev libssl-dev zlib1g-dev
 RUN npm install -g http-server
 RUN npm install -g peerflix
 RUN npm install -g local-cors-proxy
