@@ -1,0 +1,15 @@
+{
+  "name": "feeder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "docker-compose down; cd peerflix; npm i; cd ..; docker-compose build; rm -rf peerflix/package-lock.json;",
+    "up": "docker-compose up"
+  },
+  "author": "",
+  "license": "ISC"
+}
