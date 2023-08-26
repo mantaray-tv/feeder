@@ -30,7 +30,6 @@ RUN npm install -g local-cors-proxy
 RUN mkdir /live
 COPY ./index.html /live/index.html
 COPY ./run.sh /run.sh
-COPY ./vlc.sh /vlc.sh
 COPY ./test.torrent /test.torrent
 COPY ./torrc /etc/tor/torrc
 COPY ./torsocks.conf /etc/tor/torsocks.conf
