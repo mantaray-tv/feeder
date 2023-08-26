@@ -3,7 +3,7 @@ FROM ubuntu:23.04
 LABEL org.opencontainers.image.source=https://github.com/mantaray-tv/feeder
 
 RUN apt update -y
-# RUN apt install vlc-plugin-bittorrent -y
+RUN apt install vlc-plugin-bittorrent -y
 RUN apt install -y tor
 # RUN apt install -y software-properties-common build-essential
 # RUN apt install -y git
