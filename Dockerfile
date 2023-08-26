@@ -33,4 +33,4 @@ COPY ./run.sh /run.sh
 COPY ./test.torrent /test.torrent
 COPY ./torrc /etc/tor/torrc
 COPY ./torsocks.conf /etc/tor/torsocks.conf
-ENTRYPOINT ["/bin/bash", "/run.sh"]
+ENTRYPOINT ["/bin/bash", "/run.sh", "/test.torrent"]
