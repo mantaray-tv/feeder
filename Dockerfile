@@ -22,7 +22,7 @@ RUN apt install -y nodejs
 RUN apt install -y npm
 RUN apt install -y vlc
 RUN npm install -g http-server
-RUN npm install -g peerflix
+# RUN npm install -g peerflix
 RUN npm install -g local-cors-proxy
 RUN mkdir /live
 COPY ./index.html /live/index.html
