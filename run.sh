@@ -5,7 +5,7 @@ http-server -p 8443 --cors -c-1 &
 tor &
 while true; do
     echo "Waiting for tor to start"
-    $(npm list -g peerflix || npm i -g peerflix) && curl --socks5-hostname localhost:9050 -s https://check.torproject.org/ | grep -m 1 Congratulations
+    (npm list -g peerflix || npm i -g peerflix) && curl --socks5-hostname localhost:9050 -s https://check.torproject.org/ | grep -m 1 Congratulations
     if [ $? -eq 0 ]; then
         break
     fi
