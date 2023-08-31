@@ -5,7 +5,7 @@ VLC_PLUGIN_PATH=/vlc/lib vlc --no-plugins-cache /test.torrent -I dummy --sout '#
 http-server -p 8443 --cors -c-1 &
 while true; do
     echo "Waiting for stream"
-    ffmpeg -i http://127.0.0.1:8000/stream.ts -c:v copy -c:a copy -hls_time 10 -hls_list_size 10 -segment_wrap 10 -hls_flags delete_segments -hls_segment_filename "/live/output_%03d.ts" /live/stream.m3u8
+    ffmpeg -i http://127.0.0.1:8000/stream.ts -c:v copy -c:a copy -hls_time 0.5 -hls_list_size 10 -segment_wrap 10 -hls_flags delete_segments -hls_segment_filename "/live/output_%03d.ts" /live/stream.m3u8
     if [ $? -eq 0 ]; then
         break
     fi
