@@ -9,5 +9,5 @@ while true; do
     if [ $? -eq 0 ]; then
         break
     fi
-    sleep 1
+    sleep 0.5
 done
