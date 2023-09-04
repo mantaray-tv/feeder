@@ -7,8 +7,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build": "docker-compose down; docker-compose build; rm -rf peerflix/package-lock.json;",
-    "up": "docker-compose up"
+    "build": "docker-compose down; docker-compose build;",
+    "up": "docker-compose up;",
+    "start": "docker-compose down; docker-compose build; docker-compose up;"
   },
   "author": "",
   "license": "ISC"
