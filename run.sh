@@ -1,7 +1,7 @@
 cd /live
 mkdir -p /root/.cache/vlc
 sed -i 's/geteuid/getppid/' /usr/bin/vlc
-VLC_PLUGIN_PATH=/vlc/lib vlc --no-plugins-cache /test.torrent -I dummy --sout '#transcode{vcodec=h264,acodec=aac,soverlay,vb=6000,ab=320}:std{access=http,mux=ts,dst=:8000/stream.ts}' &
+VLC_PLUGIN_PATH=/vlc/lib vlc --avcodec-hw=none --no-plugins-cache /test.torrent -I dummy --sout '#transcode{vcodec=h264,acodec=aac,soverlay,vb=6000,ab=320}:std{access=http,mux=ts,dst=:8000/stream.ts}' &
 http-server -p 8443 --cors -c-1 &
 while true; do
     echo "Waiting for stream"
