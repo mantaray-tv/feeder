@@ -13,6 +13,7 @@
     "@babel/preset-env": "7.22.5",
     "babelify": "10.0.0",
     "eslint": "^8.42.0",
+    "eslint-config-semistandard": "^17.0.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^16.0.0",
@@ -22,10 +23,10 @@
     "start": "node src/index.js"
   },
   "dependencies": {
-    "bep9-metadata-dl": "^0.3.1",
+    "child-process-promise": "^2.2.1",
     "eventsource": "^2.0.2",
-    "lru-cache": "^10.0.0",
-    "reconnecting-eventsource": "^1.6.2",
-    "torrent-stream": "^1.2.1"
+    "get-port": "^7.0.0",
+    "peerjs-on-node": "^1.0.2",
+    "reconnecting-eventsource": "^1.6.2"
   }
 }
