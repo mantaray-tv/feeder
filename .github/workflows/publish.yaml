@@ -1,0 +1,23 @@
+name: Publish Docker Image
+
+on:
+  workflow_dispatch 
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Init
+        run: |
+          echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u ${{ secrets.CR_USERNAME }} --password-stdin
+      - name: Build
+        run: |
+          yarn build
+      - name: Publish
+        run: |
+          docker push ghcr.io/mantaray-tv/feeder:latest

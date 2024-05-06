@@ -1,0 +1,8 @@
+<iframe id="prod">
+</iframe>
+<iframe id="local">
+</iframe>
+<script>
+  document.getElementById("prod").src = `https://frontend-6p6.pages.dev/internal/handshake?sandboxTarget=${encodeURIComponent(window.location.href)}`;
+  document.getElementById("local").src = `http://localhost:3000/internal/handshake?sandboxTarget=${encodeURIComponent(window.location.href)}`;
+</script>
