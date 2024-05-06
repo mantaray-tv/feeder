@@ -1,69 +1,38 @@
-import WebTorrent from 'webtorrent'
-import torrentEngine from 'torrent-stream'
-import LazyLoadChunkStore from './chunk-store.js'
-import { LRUCache } from 'lru-cache'
-import C from './constants.js'
-import ReconnectingEventSource from 'reconnecting-eventsource'
-import EventSource from 'eventsource'
+import C from './constants.js';
+import ReconnectingEventSource from 'reconnecting-eventsource';
+import EventSource from 'eventsource';
+import { Peer } from 'peerjs-on-node';
+import { spawn } from 'child-process-promise';
+import getPort from 'get-port';
 
-global.EventSource = EventSource
+global.EventSource = EventSource;
 
-const client = new WebTorrent()
-const engineLRU = new LRUCache({
-  max: C.MAX_NUM_PROXY,
-  dispose: (value, key) => {
-    console.log(`Removing ${key}`)
-    // value.engine.destroy()
-    value.client.destroy()
-    value.preloadedStore.reset()
-  }
-})
-
-const sse = new ReconnectingEventSource(C.COORDINATOR_URL)
-const trackers = [
-  ...[
-    'wss://tracker.btorrent.xyz/announce',
-    'wss://tracker.openwebtorrent.com/announce',
-    'wss://tracker.fastcast.nz/announce'
-  ],
-  ...[
-    'http://bt.beatrice-raws.org:80/announce',
-    'http://nyaa.tracker.wf:7777/announce',
-    'http://bt.hliang.com:2710/announce'
-  ],
-  ...(
-    (
-      await (
-        await fetch('https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt')
-      ).text()
-    ).split('\n').map((tracker) => tracker.trim()).filter((tracker) => tracker.length > 0)
-  )
-].reduce(function (a, b) {
-  if (a.indexOf(b) < 0) a.push(b)
-  return a
-}, [])
-globalThis.TRACKERS = trackers
+const sse = new ReconnectingEventSource(C.COORDINATOR_URL);
+const peer = new Peer();
 
 sse.addEventListener('message', async (event) => {
-  const { infoHash } = JSON.parse(event.data)
-  if (engineLRU.get(infoHash)) return
-  const engine = torrentEngine(infoHash, { trackers })
-  console.log(`Fetching ${infoHash}`)
-  engine.on('torrent', async () => {
-    const meta = engine.torrent.info
-    const preloadedStore = new LazyLoadChunkStore(meta.length, meta['piece length'], engine, engineLRU)
-    engineLRU.set(infoHash, {
-      engine,
-      client,
-      preloadedStore
-    })
-    engine.destroy()
-    client.seed(null, {
-      metadata: meta,
-      infoHash,
-      preloadedStore
-    }, (torrent) => {
-      console.log(`Proxying ${torrent.infoHash}`)
-    })
-  })
-})
+  const { infoHash, clientSessionId } = JSON.parse(event.data);
+  const conn = peer.connect(clientSessionId);
+
+  conn.on('open', () => {
+    conn.on('data', async (data) => {
+      const { type } = data;
+      if (type === 'requestStream') {
+        const port = await getPort();
+        spawn(
+          'peerflix',
+          [
+            `magnet:?xt=urn:btih:${infoHash}&dn=%5BErai-raws%5D%20Oshi%20no%20Ko%20-%2011%20%5B1080p%5D%5BMultiple%20Subtitle%5D%20%5BENG%5D%5BPOR-BR%5D%5BSPA-LA%5D&tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce`,
+            '--vlc',
+            '--',
+            '-I',
+            'rc',
+            '--sout',
+            `#transcode{vcodec=H264,threads=1,acodec=aac,soverlay}:std{access=http,mux=ts,dst=:${port}/stream.m2ts}`,
+            '--no-playlist-autostart'
+          ]
+        );
+      }
+    });
+  });
+});

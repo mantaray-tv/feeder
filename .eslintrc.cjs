@@ -5,7 +5,7 @@ module.exports = {
     node: true,
     serviceworker: true
   },
-  extends: ['standard'],
+  extends: ['semistandard'],
   parser: '@babel/eslint-parser',
   parserOptions: {
     sourceType: 'module',
@@ -18,4 +18,4 @@ module.exports = {
     }
   },
   ignorePatterns: ['node_modules', 'dist']
-}
+};
